@@ -1,18 +1,27 @@
 # hoover
 Hoover is a little Go room cleaning program.
 
-###Instalation
+###Installation
 Hoover requires Go 1.5 or later.
-```go
-go get github.com/phedoreanu/hoover
+```
+go get -u github.com/phedoreanu/hoover
 ```
 
 ###Usage
 Invoke `hoover` in the same directory as `input.txt`.
 
 ###Testing
-Invoke `go test` in the project's root folder.
-
+To run the tests:
+```
+$ go test github.com/phedoreanu/hoover
+ok      github.com/phedoreanu/hoover    0.005s
+```
+As always, if you are running the `go` tool from the package directory, you can omit the package path:
+```
+$ go test
+PASS
+ok      github.com/phedoreanu/hoover    0.005s
+```
 ###Improvements
- * Add command-line flags for verbose output and multiple input files
- * Dockerize program
+ * Add command-line flags for more verbose output and multiple input files
+ * Docker + RESTful API

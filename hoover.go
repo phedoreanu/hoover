@@ -1,3 +1,4 @@
+// Package main contains the source code of a hoover
 package main
 
 import (
@@ -12,13 +13,7 @@ import (
 // Patch defines a square in the room
 // with X and Y coordinates
 type Patch struct {
-	X, Y int
-}
-
-// NewPatch returns a new Patch from string coordinates
-func NewPatch(s string) Patch {
-	c := strings.Split(s, " ")
-	return Patch{X: stringToInt(c[0]), Y: stringToInt(c[1])}
+	X, Y uint16
 }
 
 // String handles Patch pretty print
@@ -26,26 +21,32 @@ func (p Patch) String() string {
 	return fmt.Sprintf("%d %d", p.X, p.Y)
 }
 
-// Hoover is a imaginary robotic hoover
+// NewPatch returns a new Patch from string coordinates
+func NewPatch(s string) Patch {
+	c := strings.Split(s, " ")
+	return Patch{X: parseUInt16(c[0]), Y: parseUInt16(c[1])}
+}
+
+// Hoover is an imaginary robotic hoover
 type Hoover struct {
 	Location          Patch
 	Room              map[Patch]bool
-	Cleaned, Boundary int
+	Cleaned, Boundary uint16
+	Steps             []byte
 }
 
-// String handles Hoover pretty print
+// String handles *Hoover pretty print
 func (h *Hoover) String() string {
 	return fmt.Sprintf("%s\n%d", h.Location, h.Cleaned)
 }
 
-func stringToInt(s string) (x int) {
-	x, _ = strconv.Atoi(s)
-	return
+func parseUInt16(s string) uint16 {
+	ui64, _ := strconv.ParseUint(s, 10, 16)
+	return uint16(ui64)
 }
 
-// Walk moves the robot through the room
-func (h *Hoover) Walk(steps []byte) {
-	for _, s := range steps {
+func (h *Hoover) clean() {
+	for _, s := range h.Steps {
 		switch {
 		case h.Location.Y < h.Boundary && s == 78: // N
 			h.Location.Y++
@@ -66,11 +67,8 @@ func (h *Hoover) Walk(steps []byte) {
 
 // Vacuum hoovers the room `filename`
 func (h *Hoover) Vacuum(filename string) string {
-	input, _ := ioutil.ReadFile(filename)
-	bufSrc := bytes.NewReader(input)
-	scanner := bufio.NewScanner(bufSrc)
-
-	var steps []byte
+	data, _ := ioutil.ReadFile(filename)
+	scanner := bufio.NewScanner(bytes.NewReader(data))
 
 	lineNo := 0
 	for scanner.Scan() {
@@ -84,7 +82,7 @@ func (h *Hoover) Vacuum(filename string) string {
 			switch lineNo {
 			case 0:
 				h.Room = make(map[Patch]bool)
-				h.Boundary = stringToInt(strings.Split(scanner.Text(), " ")[0])
+				h.Boundary = parseUInt16(strings.Split(scanner.Text(), " ")[0])
 			case 1:
 				h.Location = NewPatch(scanner.Text())
 			default:
@@ -92,13 +90,12 @@ func (h *Hoover) Vacuum(filename string) string {
 				h.Room[dirtyPatch] = true
 			}
 		case 65 <= b && b <= 90: // characters
-			for _, c := range scanner.Bytes() {
-				steps = append(steps, c)
-			}
+			h.Steps = scanner.Bytes()
 		}
 		lineNo++
 	}
-	h.Walk(steps)
+
+	h.clean()
 
 	return h.String()
 }
