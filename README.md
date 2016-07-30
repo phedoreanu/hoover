@@ -1,7 +1,7 @@
 # hoover
 Hoover is a little Go room cleaning program.
 
-[![Build Status](https://travis-ci.org/phedoreanu/hoover.svg?branch=master)](https://travis-ci.org/phedoreanu/hoover) [![Coverage Status](https://coveralls.io/repos/github/phedoreanu/hoover/badge.svg)](https://coveralls.io/github/phedoreanu/hoover)
+[![Build Status](https://travis-ci.org/phedoreanu/hoover.svg?branch=master)](https://travis-ci.org/phedoreanu/hoover) [![Coverage Status](https://coveralls.io/repos/github/phedoreanu/hoover/badge.svg)](https://coveralls.io/github/phedoreanu/hoover) [![Code Climate](https://codeclimate.com/github/phedoreanu/hoover/badges/gpa.svg)](https://codeclimate.com/github/phedoreanu/hoover) [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
 
 ###Installation
 Hoover requires Go 1.5 or later.
