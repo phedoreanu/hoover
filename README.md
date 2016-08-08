@@ -4,7 +4,7 @@ Hoover is a little Go room cleaning library.
 ###Installation
 Hoover requires Go 1.5 or later.
 
-This repo contains just the _library_, check out [vacuum](https://github.com/phedoreanu/vacuum) for the concrete implementation or the [godocs](https://godoc.org/github.com/phedoreanu/hoover#ex-package).
+This repo contains just the _library_, check out [vacuum](https://github.com/phedoreanu/vacuum)/[godocs](https://godoc.org/github.com/phedoreanu/hoover#ex-package) for an example.
 
 ```
 go get -u github.com/phedoreanu/vacuum
