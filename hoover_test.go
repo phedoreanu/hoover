@@ -2,6 +2,7 @@ package hoover_test
 
 import (
 	"fmt"
+	"testing"
 
 	"github.com/phedoreanu/hoover"
 )
@@ -20,19 +21,19 @@ func ExampleNewHoover() {
 	// 2
 }
 
-func ExampleFakeInput() {
-	fmt.Println(hoover.NewHoover("input_fake.txt"))
-	// Output: <nil>
-}
+func TestHoover(t *testing.T) {
+	cases := []struct {
+		in, want string
+	}{
+		{"input_face.txt", "<nil>"},
+		{"input_empty.txt", "<nil>"},
+		{"input_room_clean.txt", "1 3\n0"},
+	}
 
-func ExampleEmptyInput() {
-	fmt.Println(hoover.NewHoover("input_empty.txt"))
-	// Output: <nil>
-}
-
-func ExampleCleanRoom() {
-	fmt.Println(hoover.NewHoover("input_room_clean.txt"))
-	// Output:
-	// 1 3
-	// 0
+	for _, c := range cases {
+		got := fmt.Sprint(hoover.NewHoover(c.in))
+		if got != c.want {
+			t.Errorf("Vacuum(%q) == %q, want %q", c.in, got, c.want)
+		}
+	}
 }

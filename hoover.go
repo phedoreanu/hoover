@@ -22,9 +22,9 @@ func (p Patch) String() string {
 }
 
 // NewPatch returns a new Patch from string coordinates
-func NewPatch(s string) Patch {
+func NewPatch(s string) *Patch {
 	c := strings.Split(s, " ")
-	return Patch{X: parseInt(c[0]), Y: parseInt(c[1])}
+	return &Patch{X: parseInt(c[0]), Y: parseInt(c[1])}
 }
 
 // Update calculates the next Patch to go
@@ -38,7 +38,7 @@ func (p *Patch) Update(n, b *Patch) {
 
 // Hoover is an imaginary robotic hoover
 type Hoover struct {
-	Location, Boundary Patch
+	Location, Boundary *Patch
 	Room               map[Patch]bool
 	Dirty              int
 }
@@ -46,7 +46,7 @@ type Hoover struct {
 // String returns the Hoover's last position
 // and the number of Patches cleaned
 func (h *Hoover) String() string {
-	return fmt.Sprintf("%s\n%d\n", h.Location, h.Dirty-len(h.Room))
+	return fmt.Sprintf("%s\n%d", h.Location, h.Dirty-len(h.Room))
 }
 
 func parseInt(s string) int64 {
@@ -56,26 +56,25 @@ func parseInt(s string) int64 {
 
 // vacuum hoovers the room for given moves
 func (h *Hoover) vacuum(moves string) {
-	directions := map[byte]*Patch{
+	directions := map[rune]*Patch{
 		78: {X: 0, Y: 1},  // N
 		83: {X: 0, Y: -1}, // S
 		69: {X: 1, Y: 0},  // E
 		87: {X: -1, Y: 0}, // W
 	}
 
-	loc := &h.Location
-	for _, d := range []byte(moves) {
-		loc.Update(directions[d], &h.Boundary)
-		delete(h.Room, h.Location) // clean dirty Patch
+	for _, d := range moves {
+		h.Location.Update(directions[d], h.Boundary)
+		delete(h.Room, *h.Location) // clean dirty Patch
 	}
 }
 
 func (h *Hoover) placeDirtyPatches(coordinates []string) {
 	for _, c := range coordinates {
 		dirtyPatch := NewPatch(c)
-		h.Room[dirtyPatch] = true
-		h.Dirty++
+		h.Room[*dirtyPatch] = true
 	}
+	h.Dirty = len(h.Room)
 }
 
 // NewHoover returns a new `Hoover` instance
